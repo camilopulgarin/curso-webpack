@@ -2,7 +2,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const Dotenv = require("dotenv-webpack");
+const Dotenv = require('dotenv-webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
   entry: './src/index.js',
@@ -12,14 +13,14 @@ module.exports = {
     assetModuleFilename: 'assets/images/[hash][ext][query]'
   },
   mode: 'development',
-  watch: true,
+  devtool: 'source-map',
   resolve: {
     extensions: ['.js'],
     alias: {
-        '@utils': path.resolve(__dirname, 'src/utils/'),
-        '@templates': path.resolve(__dirname, 'src/templates/'),
-        '@styles': path.resolve(__dirname, 'src/styles/'),
-        '@images': path.resolve(__dirname, 'src/assets/images/')
+      '@utils': path.resolve(__dirname, 'src/utils/'),
+      '@templates': path.resolve(__dirname, 'src/templates/'),
+      '@styles': path.resolve(__dirname, 'src/styles/'),
+      '@images': path.resolve(__dirname, 'src/assets/images/'),
     }
   },
   module: {
@@ -75,6 +76,14 @@ module.exports = {
         }
       ]
     }),
-    new Dotenv()
-  ]
+    new Dotenv(),
+    new BundleAnalyzerPlugin()
+  ],
+  devServer: {
+		static: path.join(__dirname, 'dist'),
+		compress: true,
+		historyApiFallback: true,
+		port: 8080,
+		open: true,
+	}
 }
